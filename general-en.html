@@ -1,12 +1,18 @@
 <!DOCTYPE html>
-<html lang="es">
-
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="estilos.css">
-    <title>Nuevo Módulo de Estudio</title>
+    <title>Loma Linda Entrance Exam Prep</title>
+    <style>
+        /* Un poco de estilo rápido para que no se vea plano */
+        body { font-family: sans-serif; background: #f4f4f4; display: flex; justify-content: center; padding: 20px; }
+        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 100%; max-width: 500px; text-align: center; }
+        .opcion { display: block; width: 100%; margin: 10px 0; padding: 10px; cursor: pointer; border: 1px solid #ccc; border-radius: 5px; background: #fff; }
+        .opcion:hover { background: #e9e9e9; }
+        .opcion:disabled { cursor: not-allowed; opacity: 0.6; }
+        #feedback { font-weight: bold; margin: 15px; min-height: 20px; }
+    </style>
 </head>
-
 <body onmousedown="document.querySelectorAll('audio').forEach(a => a.load())">
 
     <audio id="sonido-bien" src="audios/aplausos.mp3"></audio>
@@ -14,7 +20,7 @@
     <audio id="sonido-final" src="audios/fanfarrias.mp3"></audio>
 
     <div class="card">
-        <h2 id="titulo-modulo">Nombre del Módulo</h2>
+        <h2 id="titulo-modulo">Loma Linda Specialist Prep</h2>
         <div id="contenedor-juego">
             <p id="pregunta-texto" style="font-size: 18px; font-weight: bold;"></p>
             <div id="opciones"></div>
@@ -23,12 +29,8 @@
         </div>
     </div>
 
-
-    <script src="preguntas.js"></script>
-
-
     <script>
-
+        // PEGA AQUÍ TODAS LAS PREGUNTAS QUE GENERAMOS
         const bancoDePreguntas = [
             { q: "What is the primary goal of scaling and root planing (SRP)?", a: ["To whiten teeth", "To remove biofilm and calculus", "To cure cavities", "To tighten loose teeth"], correct: 1 },
             { q: "Which cell is the first to arrive at an acute inflammatory site?", a: ["Macrophage", "Neutrophil", "Lymphocyte", "Plasma cell"], correct: 1 },
@@ -1482,26 +1484,28 @@
             { q: "Which oral lesion appears as dome-shaped swelling with bluish color?", a: ["Mucocele", "Fibroma", "Papilloma", "Leukoplakia"], correct: 0 },
             { q: "Which systemic disease delays dental healing?", a: ["Hypertension", "Diabetes mellitus", "Epilepsy", "Hyperthyroidism"], correct: 1 },
             { q: "Which dental material sets by an acid-base reaction?", a: ["Amalgam", "Glass ionomer cement", "Composite resin", "Resin-modified GIC"], correct: 1 }
-
-
-
-
-        ];
+];
 
         let preguntasSeleccionadas = [];
         let indiceActual = 0;
         let aciertos = 0;
 
         function iniciar() {
-            preguntasSeleccionadas = bancoDePreguntas.sort(() => 0.5 - Math.random()).slice(0, 20);
+            // Mezclamos y tomamos 20 preguntas para el examen
+            preguntasSeleccionadas = [...bancoDePreguntas].sort(() => 0.5 - Math.random()).slice(0, 20);
+            indiceActual = 0;
+            aciertos = 0;
             mostrarPregunta();
         }
 
         function mostrarPregunta() {
+            const contenedor = document.getElementById("contenedor-juego");
+            
             if (indiceActual < preguntasSeleccionadas.length) {
                 const p = preguntasSeleccionadas[indiceActual];
                 document.getElementById("pregunta-texto").innerText = p.q;
                 document.getElementById("contador").innerText = `Question: ${indiceActual + 1} of 20`;
+                
                 const divOpciones = document.getElementById("opciones");
                 divOpciones.innerHTML = "";
                 document.getElementById("feedback").innerText = "";
@@ -1514,39 +1518,46 @@
                     divOpciones.appendChild(btn);
                 });
             } else {
-                document.getElementById("juego").innerHTML = `<h3>Quiz Finished!</h3><p>Score: ${aciertos} out of 20</p><button class="opcion" onclick="location.reload()" style="background:#2c3e50; color:white;">Try Again</button>`;
+                // CORRECCIÓN AQUÍ: Usamos contenedor-juego que sí existe
+                contenedor.innerHTML = `
+                    <h3>Quiz Finished!</h3>
+                    <p style="font-size: 24px;">Score: ${aciertos} / 20</p>
+                    <button class="opcion" onclick="location.reload()" style="background:#2c3e50; color:white;">Try Again</button>
+                `;
+                document.getElementById("sonido-final").play();
             }
         }
 
         function verificar(elegida) {
             const correcta = preguntasSeleccionadas[indiceActual].correct;
             const feedback = document.getElementById("feedback");
+            const botones = document.querySelectorAll('.opcion');
+
+            // Bloquear botones para que no sigan clickeando
+            botones.forEach(b => b.disabled = true);
 
             if (elegida === correcta) {
                 aciertos++;
                 feedback.innerText = "Correct ✅";
                 feedback.style.color = "green";
-                document.getElementById("sonido-bien").play(); // <--- Aquí suena el acierto
+                botones[elegida].style.background = "#d4edda";
+                document.getElementById("sonido-bien").play().catch(e => console.log("Audio play blocked"));
             } else {
                 feedback.innerText = "Incorrect ❌";
                 feedback.style.color = "red";
-                document.getElementById("sonido-mal").play();  // <--- Aquí suena el error
+                botones[elegida].style.background = "#f8d7da";
+                // Mostrar cuál era la correcta
+                botones[correcta].style.border = "2px solid green";
+                document.getElementById("sonido-mal").play().catch(e => console.log("Audio play blocked"));
             }
-
-            // Bloquear botones
-            const botones = document.querySelectorAll('.opcion');
-            botones.forEach(b => b.disabled = true);
 
             setTimeout(() => {
                 indiceActual++;
                 mostrarPregunta();
-            }, 1500);
+            }, 2000); // 2 segundos para que alcancen a leer el feedback
         }
-
 
         iniciar();
     </script>
-
 </body>
-
 </html>
