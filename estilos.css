@@ -1,0 +1,86 @@
+/* Variables de color para cambiar todo rápido */
+:root {
+    --primario: #2c3e50;    /* Azul elegante */
+    --acento: #3498db;      /* Azul dental */
+    --exito: #27ae60;       /* Verde para aciertos */
+    --error: #e74c3c;       /* Rojo para fallos */
+    --fondo: #f4f7f6;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background-color: var(--fondo);
+    color: var(--primario);
+    padding: 20px;
+}
+
+.card {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    max-width: 650px;
+    margin: 20px auto;
+    border-top: 8px solid var(--acento); /* Detalle estético superior */
+}
+
+h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+}
+
+.opcion {
+    display: block;
+    width: 100%;
+    background: #f8f9fa;
+    border: 2px solid #eee;
+    padding: 18px;
+    margin: 12px 0;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    color: var(--primario);
+    text-align: left; /* Más legible para preguntas largas */
+}
+
+.opcion:hover {
+    border-color: var(--acento);
+    background-color: #ebf5fb;
+    transform: scale(1.02);
+}
+
+#feedback {
+    font-size: 1.2rem;
+    margin: 15px 0;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+#contador {
+    background: var(--primario);
+    color: white;
+    display: inline-block;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    margin-top: 20px;
+}
+/* Firma del Dr. Carlos Corella */
+footer {
+    margin-top: 40px;
+    padding: 20px;
+    border-top: 1px solid #ddd;
+    text-align: center;
+    color: #95a5a6; /* Gris sutil */
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+}
+
+.branding-clinica {
+    font-weight: bold;
+    color: #2c3e50; /* Azul oscuro */
+    display: block;
+    margin-bottom: 5px;
+}

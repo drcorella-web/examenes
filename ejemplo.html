@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="estilos.css">
+    <title>Nuevo Módulo de Estudio</title>
+</head>
+<body onmousedown="document.querySelectorAll('audio').forEach(a => a.load())">
+    
+    <audio id="sonido-bien" src="audios/aplausos.mp3"></audio>
+    <audio id="sonido-mal" src="audios/failfara.mp3"></audio>
+    <audio id="sonido-final" src="audios/fanfarrias.mp3"></audio>
+
+    <div class="card">
+        <h2 id="titulo-modulo">Nombre del Módulo</h2>
+        <div id="contenedor-juego">
+            <p id="pregunta-texto" style="font-size: 18px; font-weight: bold;"></p>
+            <div id="opciones"></div>
+            <div id="feedback"></div>
+            <p id="contador"></p>
+        </div>
+    </div>
+
+    <script src="preguntas.js"></script> 
+
+
+
+
+
+    
+    <script>
+        // Aquí es donde pegas las preguntas que quieras
+        const bancoNuevo = [
+            { q: "Pregunta de ejemplo 1", a: ["Opción A", "Opción B", "Correcta", "Opción D"], correct: 2 },
+        ];
+
+        // Se lanza el examen
+        iniciarExamen(bancoNuevo);
+    </script>
+</body>
+</html>

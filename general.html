@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen Dental - Loma Linda</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f0f4f8;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: auto;
+        }
+
+        h2 { color: #2c3e50; }
+
+        .opcion {
+            display: block;
+            width: 100%;
+            background: #e9ecef;
+            border: none;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        .opcion:hover { background: #d1d8e0; }
+
+        #feedback {
+            font-weight: bold;
+            margin-top: 15px;
+            min-height: 24px;
+        }
+
+        #contador {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body onmousedown="iniciarAudio()">
+    <audio id="sonido-bien" src="audios/aplausos.mp3"></audio>
+    <audio id="sonido-mal" src="audios/failfara.mp3"></audio>
+    <audio id="sonido-final" src="audios/fanfarrias.mp3"></audio>
+
+    <div class="card">
+        <h2 id="titulo">Reto Dental Loma Linda</h2>
+        <div id="contenedor-juego">
+            <p id="pregunta-texto" style="font-size: 18px; font-weight: bold;"></p>
+            <div id="opciones"></div>
+            <div id="feedback"></div>
+            <p id="contador">Pregunta: 1 de 20</p>
+        </div>
+    </div>
+
+    <script>
+        function iniciarAudio() {
+            document.getElementById("sonido-bien").load();
+            document.getElementById("sonido-mal").load();
+            document.getElementById("sonido-final").load();
+        }
+
+        const bancoDePreguntas = [
+            { q: "¿Cuál es el objetivo principal del raspado y alisado radicular (RAR)?", a: ["Blanquear los dientes", "Eliminar biofilme y cálculo", "Curar caries", "Apretar dientes flojos"], correct: 1 },
+            { q: "¿Qué célula es la primera en llegar a un sitio de inflamación aguda?", a: ["Macrófago", "Neutrófilo", "Linfocito", "Célula plasmática"], correct: 1 },
+            { q: "¿Cuál es el material estándar de oro para el recubrimiento pulpar directo?", a: ["Ionómero de Vidrio", "MTA (Agregado de Trióxido Mineral)", "Fosfato de Zinc", "Resina"], correct: 1 },
+            { q: "¿Cuántos días después de la extracción ocurre comúnmente la Alveolitis Seca?", a: ["1 hora", "3-5 días", "2 semanas", "1 mes"], correct: 1 },
+            { q: "¿Qué espacio está involucrado en la Angina de Ludwig?", a: ["Submandibular", "Submental", "Sublingual", "Todos los anteriores"], correct: 3 },
+            { q: "¿Cuál es la causa principal de un margen abierto en una corona?", a: ["Mala impresión", "Demasiado cemento", "Tiempo de fraguado rápido", "Paciente mordiendo fuerte"], correct: 0 },
+            { q: "La apariencia de 'Escalón' en el hueso alveolar es un signo de:", a: ["Hueso sano", "Oclusión traumática", "Deficiencia de Vitamina C", "Gingivitis"], correct: 1 },
+            { q: "¿Qué tejido dental tiene el mayor contenido mineral?", a: ["Dentina", "Esmalte", "Cemento", "Hueso alveolar"], correct: 1 },
+            { q: "Una 'Prueba de frío' en endodoncia verifica principalmente:", a: ["Salud periodontal", "Vitalidad pulpar", "Fractura radicular", "Caries dental"], correct: 1 },
+            { q: "¿Cuál es el tumor benigno de glándulas salivales más común?", a: ["Tumor de Warthin", "Adenoma Pleomórfico", "Carcinoma Mucoepidermoide", "Adenoma"], correct: 1 },
+            { q: "¿Qué describe la apariencia de 'Vidrio Esmerilado' en una radiografía?", a: ["Ameloblastoma", "Displasia Fibrosa", "Osteosarcoma", "Mieloma Múltiple"], correct: 1 },
+            { q: "¿Cuál es la acción principal del músculo Masetero?", a: ["Protrusión", "Depresión", "Elevación", "Retracción"], correct: 2 },
+            { q: "¿Qué nervio corre riesgo durante la extracción de un tercer molar inferior?", a: ["Nervio Facial", "Nervio Lingual", "Nervio Maxilar", "Nervio Hipogloso"], correct: 1 },
+            { q: "¿Cuál es el tratamiento de elección para el 'Status Epilepticus' en el consultorio dental?", a: ["Etosuximida", "Diazepam (IV/IM)", "Fenitoína", "Aspirina"], correct: 1 },
+            { q: "La 'Y invertida' en una radiografía está formada por la unión de:", a: ["Seno Maxilar y Fosa Nasal", "Órbita y Seno", "Conducto Incisivo y Paladar", "Conducto Mandibular y Foramen Mentoniano"], correct: 0 },
+            { q: "¿Cuál anestésico local es un éster?", a: ["Lidocaína", "Articaína", "Benzocaína", "Mepivacaína"], correct: 2 },
+            { q: "¿Qué tipo de shock se caracteriza por un olor a aliento frutal (acetona)?", a: ["Anafiláctico", "Hipovolémico", "Cetoacidosis", "Séptico"], correct: 2 },
+            { q: "La 'Erupción en mariposa' es un signo clásico de:", a: ["Lupus Eritematoso", "Pénfigo Vulgar", "Liquen Plano", "Candidiasis"], correct: 0 },
+            { q: "¿Qué célula es responsable de la resorción del hueso?", a: ["Osteoblasto", "Osteoclasto", "Osteocito", "Fibroblasto"], correct: 1 },
+            { q: "¿Cuál es el componente principal de la Gutapercha dental?", a: ["Sulfato de Bario", "Óxido de Zinc", "Gutapercha Pura", "Cera"], correct: 1 },
+            { q: "Una radiolucidez en 'Pompas de Jabón' se asocia más comúnmente con:", a: ["Odontoma", "Ameloblastoma", "Quiste Periapical", "Cementoblastoma"], correct: 1 },
+            { q: "¿Qué antibiótico está contraindicado en el embarazo por teñir los dientes?", a: ["Amoxicilina", "Clindamicina", "Tetraciclina", "Eritromicina"], correct: 2 },
+            { q: "El patrón trabecular en 'Escalera' o 'Valla' se observa en:", a: ["Anemia", "Enfermedad de Paget", "Diabetes", "Anemia Falciforme"], correct: 3 },
+            { q: "¿Qué par craneal controla los músculos de la expresión facial?", a: ["V (Trigémino)", "VII (Facial)", "IX (Glosofaríngeo)", "XII (Hipogloso)"], correct: 1 },
+            { q: "¿Cuál es la dosis máxima de Epinefrina para un paciente sano?", a: ["0.04 mg", "0.2 mg", "1.0 mg", "0.5 mg"], correct: 1 },
+            { q: "¿Qué condición muestra hueso con apariencia de 'Mota de Algodón'?", a: ["Enelopatía", "Enfermedad de Paget", "Displasia Fibrosa", "Osteomielitis"], correct: 1 },
+            { q: "El sitio más común para un Mucocele es:", a: ["Labio Superior", "Labio Inferior", "Paladar Duro", "Paladar Blando"], correct: 1 },
+            { q: "¿Qué vitamina es esencial para la coagulación sanguínea?", a: ["Vitamina A", "Vitamina C", "Vitamina D", "Vitamina K"], correct: 3 },
+            { q: "¿Cuál es la causa principal de la 'Alveolitis Seca' (Osteítis Alveolar)?", a: ["Infección", "Fibrinólisis del coágulo", "Trauma", "Mala higiene"], correct: 1 },
+            { q: "La línea 'Ah' también se conoce como:", a: ["Línea de vibración", "Escotadura Hamular", "Unión mucogingival", "Reborde alveolar"], correct: 0 }
+        ];
+
+        let preguntasSeleccionadas = [];
+        let indiceActual = 0;
+        let aciertos = 0;
+
+        function iniciarExamen() {
+            preguntasSeleccionadas = [...bancoDePreguntas].sort(() => Math.random() - 0.5).slice(0, 20);
+            indiceActual = 0;
+            aciertos = 0;
+            mostrarPregunta();
+        }
+
+        function mostrarPregunta() {
+            if (indiceActual >= preguntasSeleccionadas.length) {
+                const porcentaje = (aciertos / preguntasSeleccionadas.length) * 100;
+                if (porcentaje >= 60) document.getElementById("sonido-final").play();
+
+                document.getElementById("contenedor-juego").innerHTML = `
+                    <div style="text-align: center; padding: 20px;">
+                        <h2>¡Reto Terminado!</h2>
+                        <p style="font-size: 28px; font-weight: bold;">Calificación: ${aciertos} de 20</p>
+                        <p style="color: ${porcentaje >= 60 ? 'green' : 'red'};">${porcentaje >= 60 ? '¡Felicidades, Doctor!' : 'A estudiar más.'}</p>
+                        <button onclick="location.reload()" class="opcion" style="background: #2ecc71; color: white;">Volver a jugar 🔄</button>
+                        <button onclick="window.location.href='index.html'" class="opcion" style="background: #e74c3c; color: white;">Salir al Menú 🚪</button>
+                    </div>`;
+                return;
+            }
+
+            const p = preguntasSeleccionadas[indiceActual];
+            document.getElementById("pregunta-texto").innerText = p.q;
+            document.getElementById("contador").innerText = "Pregunta: " + (indiceActual + 1) + " de 20";
+            
+            const opcionesDiv = document.getElementById("opciones");
+            opcionesDiv.innerHTML = "";
+            document.getElementById("feedback").innerText = "";
+
+            // MEZCLAR RESPUESTAS
+            let mezcladas = p.a.map((texto, index) => ({ texto, index }));
+            mezcladas.sort(() => Math.random() - 0.5);
+
+            mezcladas.forEach((obj) => {
+                const btn = document.createElement("button");
+                btn.innerText = obj.texto;
+                btn.className = "opcion";
+                btn.onclick = () => verificar(obj.index);
+                opcionesDiv.appendChild(btn);
+            });
+        }
+
+        function verificar(elegida) {
+            const correcta = preguntasSeleccionadas[indiceActual].correct;
+            const botones = document.querySelectorAll(".opcion");
+            botones.forEach(b => b.disabled = true);
+
+            if (elegida === correcta) {
+                aciertos++;
+                document.getElementById("feedback").innerText = "¡Correcto! ✅";
+                document.getElementById("sonido-bien").play();
+            } else {
+                document.getElementById("feedback").innerText = "Incorrecto ❌";
+                document.getElementById("sonido-mal").play();
+            }
+
+            setTimeout(() => {
+                indiceActual++;
+                mostrarPregunta();
+            }, 1500);
+        }
+
+        iniciarExamen();
+    </script>
+</body>
+</html>
